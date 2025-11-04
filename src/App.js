@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Header from "./components/Header";
 import Signup from "./pages/Signup";
@@ -21,34 +21,48 @@ import Contact from "./pages/Contact";
 import Faqs from "./pages/Faqs";
 import Terms from "./pages/Terms";
 import PrivacyPolicy from "./PrivacyPolicy";
+import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   return (
     <div>
       <Router>
-        <Header />
         <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/register" element={<Signup />} />
-          <Route exact path="/login" element={<Login />} />
-          <Route exact path="/movies" element={<Movies />} />
-          <Route exact path="/movie/:id" element={<MovieDetails />} />
-          <Route exact path="/plays" element={<Plays />} />
-          <Route exact path="/my-tickets" element={<Tickets />} />
-          <Route exact path="/streams" element={<Streams />} />
-          <Route exact path="/sports" element={<Sports />} />
-          <Route exact path="/events" element={<Events />} />
-          <Route exact path="/buzz" element={<Buzz />} />
-          <Route exact path="/corporates" element={<Corporates />} />
-          <Route exact path="/offers" element={<Offers />} />
-          <Route exact path="/gifts" element={<Gifts />} />
-          <Route exact path="/help" element={<Help />} />
-          <Route exact path="/contact" element={<Contact />} />
-          <Route exact path="/faqs" element={<Faqs />} />
-          <Route exact path="/terms" element={<Terms />} />
-          <Route exact path="/privacy-policy" element={<PrivacyPolicy />} />
-          
+          {/* Public routes */}
+          <Route path="/register" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected routes */}
+          <Route
+            path="/*"
+            element={
+              <ProtectedRoute>
+                <>
+                  <Header />
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/movies" element={<Movies />} />
+                    <Route path="/movie/:id" element={<MovieDetails />} />
+                    <Route path="/plays" element={<Plays />} />
+                    <Route path="/my-tickets" element={<Tickets />} />
+                    <Route path="/streams" element={<Streams />} />
+                    <Route path="/sports" element={<Sports />} />
+                    <Route path="/events" element={<Events />} />
+                    <Route path="/buzz" element={<Buzz />} />
+                    <Route exact path="/corporates" element={<Corporates />} />
+                    <Route exact path="/offers" element={<Offers />} />
+                    <Route exact path="/terms" element={<Terms />} />
+                    <Route exact path="/privacy-policy" element={<PrivacyPolicy />} />
+                    <Route exact path="/help" element={<Help />} />
+                    <Route exact path="/faqs" element={<Faqs />} />
+                  </Routes>
+                  <Footer />
+                </>
+              </ProtectedRoute>
+            }
+          />
+          <Route exact path="/gifts" element={<ProtectedRoute><Gifts /></ProtectedRoute>} />
+          <Route exact path="/contact" element={<ProtectedRoute><Contact /></ProtectedRoute>} />
         </Routes>
-        <Footer />
       </Router>
     </div>
   );

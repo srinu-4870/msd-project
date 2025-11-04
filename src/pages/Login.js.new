@@ -14,7 +14,7 @@ const Login = () => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value.trim()
+      [name]: value
     }));
   };
 
@@ -31,30 +31,15 @@ const Login = () => {
     }
 
     try {
-      // Show loading indicator
-      Swal.fire({
-        title: "Logging in...",
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        }
-      });
-
       const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          email: formData.email.toLowerCase(),
-          password: formData.password
-        })
+        body: JSON.stringify(formData)
       });
 
       const data = await response.json();
-
-      // Close loading indicator
-      Swal.close();
 
       if (response.ok) {
         // Store authentication data
@@ -62,7 +47,7 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(data.user));
         localStorage.setItem("isLoggedIn", "true");
 
-        await Swal.fire({
+        Swal.fire({
           icon: "success",
           title: "Welcome Back!",
           text: "Login successful",
@@ -108,7 +93,6 @@ const Login = () => {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Enter your email"
-                    autoComplete="email"
                     required
                   />
                 </div>
@@ -125,7 +109,6 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="Enter your password"
-                    autoComplete="current-password"
                     required
                   />
                 </div>
